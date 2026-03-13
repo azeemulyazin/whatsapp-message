@@ -106,11 +106,9 @@
 
     .phone-row input { flex: 1; }
 
-    /* Salutation buttons */
     .sal-row {
       display: flex;
       gap: 8px;
-      margin-top: 0;
     }
 
     .sal-btn {
@@ -140,30 +138,6 @@
       border: none;
       border-top: 1px solid #f0f0f0;
       margin: 1.25rem 0 0;
-    }
-
-    .fixed-number-box {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: #f6fef9;
-      border: 1.5px solid #d1f0de;
-      border-radius: 10px;
-      padding: 10px 14px;
-      font-size: 15px;
-      color: #0a8f4e;
-      font-weight: 600;
-      margin-top: 4px;
-    }
-
-    .fixed-badge {
-      margin-left: auto;
-      font-size: 11px;
-      font-weight: 600;
-      background: #d1f0de;
-      color: #0a8f4e;
-      padding: 3px 8px;
-      border-radius: 20px;
     }
 
     .preview-box {
@@ -245,22 +219,16 @@
   <label>Name *</label>
   <input type="text" id="custName" placeholder="e.g. Rahul Kumar / ABC Traders" oninput="updatePreview()" />
 
-  <label>Client phone number *</label>
+  <label>Client WhatsApp number * <span style="font-size:11px;color:#25D366;">(ഈ number-ലേക്ക് message പോകും)</span></label>
   <div class="phone-row">
     <span class="phone-prefix">+91</span>
     <input type="tel" id="custPhone" placeholder="9876543210" maxlength="10" />
   </div>
 
   <hr class="divider" />
-  <p class="section-label">📨 Message Settings</p>
+  <p class="section-label">📨 Message Template</p>
 
-  <label>Message പോകുന്ന WhatsApp number</label>
-  <div class="fixed-number-box">
-    +91 7012757330
-    <span class="fixed-badge">Fixed</span>
-  </div>
-
-  <label>Default message template</label>
+  <label>Default message</label>
   <textarea id="msgTemplate" rows="4" oninput="updatePreview(); updateCount()">നമസ്കാരം {name},
 
 എന്റെ പേര് Azeemul Yazin. ഞാൻ ഒരു Website Developer ആണ്, 3+ വർഷത്തെ അനുഭവം ഉണ്ട്.
@@ -303,7 +271,7 @@
     if (!name) return null;
     if (selectedSal === 'Sir') return name + ' Sir';
     if (selectedSal === 'Madam') return name + ' Madam';
-    return name; // Business — name only
+    return name;
   }
 
   function updatePreview() {
@@ -335,7 +303,7 @@
       return;
     }
     if (!custPhone || custPhone.length < 10) {
-      alert('⚠️ ദയവായി client phone number നൽകൂ (10 digits)');
+      alert('⚠️ ദയവായി client WhatsApp number നൽകൂ (10 digits)');
       document.getElementById('custPhone').focus();
       return;
     }
@@ -346,7 +314,7 @@
 
     var formatted = getFormattedName();
     var finalMsg = template.replace(/\{name\}/g, formatted);
-    var url = 'https://wa.me/917012757330?text=' + encodeURIComponent(finalMsg);
+    var url = 'https://wa.me/91' + custPhone + '?text=' + encodeURIComponent(finalMsg);
     window.open(url, '_blank');
   }
 
