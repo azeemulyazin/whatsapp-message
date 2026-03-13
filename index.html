@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WhatsApp Message Sender</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f0f2f5;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .container {
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+      width: 100%;
+      max-width: 460px;
+      padding: 2rem 1.75rem 1.75rem;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+
+    .wa-logo {
+      width: 36px;
+      height: 36px;
+      background: #25D366;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .wa-logo svg { width: 20px; height: 20px; fill: white; }
+
+    h2 { font-size: 20px; font-weight: 600; color: #111; }
+
+    .subtitle {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 1.5rem;
+      padding-left: 48px;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #aaa;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin: 1.25rem 0 0.75rem;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      color: #555;
+      margin-bottom: 5px;
+      margin-top: 12px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px 13px;
+      font-size: 15px;
+      font-family: inherit;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 10px;
+      background: #fafafa;
+      color: #111;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      resize: vertical;
+    }
+
+    input:focus, textarea:focus {
+      border-color: #25D366;
+      box-shadow: 0 0 0 3px rgba(37,211,102,0.12);
+      background: #fff;
+    }
+
+    .phone-row { display: flex; gap: 8px; align-items: stretch; }
+
+    .phone-prefix {
+      padding: 10px 12px;
+      font-size: 15px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 10px;
+      background: #f3f4f6;
+      color: #666;
+      white-space: nowrap;
+      font-weight: 500;
+    }
+
+    .phone-row input { flex: 1; }
+
+    /* Salutation buttons */
+    .sal-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 0;
+    }
+
+    .sal-btn {
+      flex: 1;
+      padding: 9px 0;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: inherit;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 10px;
+      background: #fafafa;
+      color: #888;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .sal-btn:hover { border-color: #25D366; color: #0a8f4e; background: #f6fef9; }
+
+    .sal-btn.active {
+      border-color: #25D366;
+      background: #f6fef9;
+      color: #0a8f4e;
+      font-weight: 600;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #f0f0f0;
+      margin: 1.25rem 0 0;
+    }
+
+    .fixed-number-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #f6fef9;
+      border: 1.5px solid #d1f0de;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 15px;
+      color: #0a8f4e;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    .fixed-badge {
+      margin-left: auto;
+      font-size: 11px;
+      font-weight: 600;
+      background: #d1f0de;
+      color: #0a8f4e;
+      padding: 3px 8px;
+      border-radius: 20px;
+    }
+
+    .preview-box {
+      background: #f6fef9;
+      border: 1.5px solid #d1f0de;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 14px;
+      color: #444;
+      line-height: 1.65;
+      min-height: 64px;
+    }
+
+    .preview-box .highlight { font-weight: 600; color: #0a8f4e; }
+
+    .char-count {
+      font-size: 11px;
+      color: #aaa;
+      text-align: right;
+      margin-top: 4px;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      margin-top: 1.5rem;
+      padding: 14px;
+      background: #25D366;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    .btn:hover { background: #1ebe5a; }
+    .btn:active { transform: scale(0.98); }
+    .btn svg { width: 20px; height: 20px; fill: white; }
+
+    .footer {
+      text-align: center;
+      font-size: 12px;
+      color: #bbb;
+      margin-top: 1.25rem;
+    }
+
+    @media (max-width: 480px) {
+      .container { padding: 1.5rem 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div class="wa-logo">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+      </svg>
+    </div>
+    <h2>WhatsApp Message Sender</h2>
+  </div>
+  <p class="subtitle">Client details നൽകി message അയക്കൂ</p>
+
+  <p class="section-label">📋 Client Info</p>
+
+  <label>Salutation</label>
+  <div class="sal-row">
+    <button type="button" class="sal-btn active" id="sal-Sir" onclick="setSal('Sir')">Sir</button>
+    <button type="button" class="sal-btn" id="sal-Madam" onclick="setSal('Madam')">Madam</button>
+    <button type="button" class="sal-btn" id="sal-Business" onclick="setSal('Business')">Business</button>
+  </div>
+
+  <label>Name *</label>
+  <input type="text" id="custName" placeholder="e.g. Rahul Kumar / ABC Traders" oninput="updatePreview()" />
+
+  <label>Client phone number *</label>
+  <div class="phone-row">
+    <span class="phone-prefix">+91</span>
+    <input type="tel" id="custPhone" placeholder="9876543210" maxlength="10" />
+  </div>
+
+  <hr class="divider" />
+  <p class="section-label">📨 Message Settings</p>
+
+  <label>Message പോകുന്ന WhatsApp number</label>
+  <div class="fixed-number-box">
+    +91 7012757330
+    <span class="fixed-badge">Fixed</span>
+  </div>
+
+  <label>Default message template</label>
+  <textarea id="msgTemplate" rows="4" oninput="updatePreview(); updateCount()">നമസ്കാരം {name},
+
+എന്റെ പേര് Azeemul Yazin. ഞാൻ ഒരു Website Developer ആണ്, 3+ വർഷത്തെ അനുഭവം ഉണ്ട്.
+
+ഇന്നത്തെ കാലത്ത് ഒരു Website ഉണ്ടെങ്കിൽ നിങ്ങളുടെ ബിസിനസ്സ് കൂടുതൽ ആളുകളിലേക്ക് എത്താൻ സഹായിക്കും. Google-ൽ ആളുകൾ നിങ്ങളുടെ സർവീസ് തിരയുമ്പോൾ അവർക്ക് നിങ്ങളുടെ ബിസിനസ്സ് എളുപ്പത്തിൽ കണ്ടെത്താനും, നിങ്ങൾ ചെയ്യുന്ന സേവനങ്ങൾ, കോൺടാക്ട് വിവരങ്ങൾ എന്നിവ കാണാനും കഴിയും.
+
+ഒരു നല്ല Website ഉണ്ടാകുന്നത് നിങ്ങളുടെ ബിസിനസിന് വിശ്വാസ്യതയും പുതിയ കസ്റ്റമേഴ്സും നേടാൻ സഹായിക്കും.
+
+നിങ്ങൾക്ക് നിങ്ങളുടെ ബിസിനസിനായി ഒരു Professional Website തയ്യാറാക്കാൻ താല്പര്യമുണ്ടെങ്കിൽ, ഞാൻ സഹായിക്കാൻ തയ്യാറാണ്.
+കൂടുതൽ വിവരങ്ങൾക്ക് reply ചെയ്യാമോ അല്ലെങ്കിൽ വിളിക്കാമോ. നന്ദി 🙏</textarea>
+  <div class="char-count" id="charCount">0 characters</div>
+
+  <label>Message preview</label>
+  <div class="preview-box" id="preview">Preview ഇവിടെ കാണാം...</div>
+
+  <button class="btn" onclick="sendWhatsApp()">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+    WhatsApp-ൽ അയക്കൂ
+  </button>
+
+  <p class="footer">Phone-ൽ open ചെയ്ത് ഉപയോഗിക്കൂ &bull; WhatsApp app install ആയിരിക്കണം</p>
+</div>
+
+<script>
+  var selectedSal = 'Sir';
+
+  function setSal(sal) {
+    selectedSal = sal;
+    ['Sir', 'Madam', 'Business'].forEach(function(s) {
+      document.getElementById('sal-' + s).classList.remove('active');
+    });
+    document.getElementById('sal-' + sal).classList.add('active');
+    updatePreview();
+  }
+
+  function getFormattedName() {
+    var name = document.getElementById('custName').value.trim();
+    if (!name) return null;
+    if (selectedSal === 'Sir') return name + ' Sir';
+    if (selectedSal === 'Madam') return name + ' Madam';
+    return name; // Business — name only
+  }
+
+  function updatePreview() {
+    var template = document.getElementById('msgTemplate').value;
+    if (!template) {
+      document.getElementById('preview').innerHTML = 'Preview ഇവിടെ കാണാം...';
+      return;
+    }
+    var formatted = getFormattedName();
+    var display = formatted
+      ? '<span class="highlight">' + formatted + '</span>'
+      : '<em>{name}</em>';
+    document.getElementById('preview').innerHTML = template.replace(/\{name\}/g, display);
+  }
+
+  function updateCount() {
+    var len = document.getElementById('msgTemplate').value.length;
+    document.getElementById('charCount').textContent = len + ' characters';
+  }
+
+  function sendWhatsApp() {
+    var name = document.getElementById('custName').value.trim();
+    var custPhone = document.getElementById('custPhone').value.trim();
+    var template = document.getElementById('msgTemplate').value;
+
+    if (!name) {
+      alert('⚠️ ദയവായി client name നൽകൂ');
+      document.getElementById('custName').focus();
+      return;
+    }
+    if (!custPhone || custPhone.length < 10) {
+      alert('⚠️ ദയവായി client phone number നൽകൂ (10 digits)');
+      document.getElementById('custPhone').focus();
+      return;
+    }
+    if (!template.trim()) {
+      alert('⚠️ Message template blank ആണ്');
+      return;
+    }
+
+    var formatted = getFormattedName();
+    var finalMsg = template.replace(/\{name\}/g, formatted);
+    var url = 'https://wa.me/917012757330?text=' + encodeURIComponent(finalMsg);
+    window.open(url, '_blank');
+  }
+
+  updatePreview();
+  updateCount();
+</script>
+
+</body>
+</html>
